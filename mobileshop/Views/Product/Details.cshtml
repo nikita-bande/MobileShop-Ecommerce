@@ -1,0 +1,142 @@
+﻿@model mobileshop.Models.Product
+@using mobileshop.Models
+@{
+    ViewBag.Title = Model.ProductName + " - Details";
+}
+
+<div class="container mt-5">
+    @* --- Main Product Section --- *@
+    <div class="row shadow-lg p-4 bg-white rounded">
+        @* Product Image *@
+        <div class="col-md-5 text-center">
+            <img src="@Model.Image" class="img-fluid rounded shadow" alt="@Model.ProductName" style="max-height: 450px;">
+        </div>
+
+        @* Product Info *@
+        <div class="col-md-7">
+            <h1 class="display-5 fw-bold text-dark">@Model.ProductName</h1>
+            <p class="badge bg-info text-dark fs-6">@Model.Category</p>
+            <hr />
+
+            <h2 class="text-success fw-bold">₹ @Model.Price.ToString("N2")</h2>
+            @* --- Professional Star Rating Section --- *@
+            <div class="mb-3">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    if (i <= Model.Rating) 
+                    {
+                        <i class="bi bi-star-fill text-warning fs-5"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-star text-muted fs-5"></i>
+                    }
+                }
+                <span class="ms-2 text-muted fw-bold">(4.5/5 Customer Rating)</span>
+            </div>
+
+            <div class="mt-4">
+                <h5 class="fw-bold">Description:</h5>
+                <p class="text-muted lead">@Model.Description</p>
+            </div>
+
+            <hr class="my-5" />
+            <div class="row mt-4">
+                <div class="col-md-8">
+                    <h3 class="fw-bold mb-4"><i class="bi bi-chat-left-text text-primary"></i> Customer Reviews</h3>
+
+                    @* --- Comment Post Karne ka Form --- *@
+                    @if (Session["UserName"] != null)
+                    {
+                        using (Html.BeginForm("PostReview", "Product", FormMethod.Post, new { @class = "mb-5" }))
+                        {
+                            <input type="hidden" name="ProductId" value="@Model.Id" />
+                            <div class="card shadow-sm border-0 p-3 bg-light">
+                                <div class="form-group mb-3">
+                                    <label class="fw-bold mb-2">Share your experience, @Session["UserName"]:</label>
+                                    <textarea name="Comment" class="form-control rounded-3" rows="3" placeholder="Write your review here..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary rounded-pill px-4 shadow">Post Review</button>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info rounded-pill">
+                            Please <a href="@Url.Action("Login", "Account")" class="fw-bold">Login</a> to write a review.
+                        </div>
+                    }
+
+                    <div class="review-list mt-4">
+                        @if (ViewBag.Reviews != null && ((List<mobileshop.Models.Review>)ViewBag.Reviews).Count > 0)
+                        {
+                            foreach (var review in (List<mobileshop.Models.Review>)ViewBag.Reviews)
+                            {
+                                <div class="card border-0 shadow-sm p-3 mb-3 rounded-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fw-bold text-primary">
+                                            <i class="bi bi-person-circle"></i> @review.UserName
+                                        </span>
+                                        <small class="text-muted">@review.ReviewDate.ToString("dd-MM-yyyy")</small>
+                                    </div>
+                                    <p class="text-dark mb-0">"@review.Comment"</p>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted italic">No reviews yet for this product. Be the first to review!</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 d-grid gap-2 d-md-block">
+                <a href="@Url.Action("AddToCart", "Cart", new { id = Model.Id })" class="btn btn-primary btn-lg px-5 shadow">
+                    <i class="bi bi-cart-plus"></i> Add to Cart
+                </a>
+                <a href="@Url.Action("Index", "Product")" class="btn btn-outline-secondary btn-lg ms-md-2">
+                    Back to Shop
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @* --- Amazon/Flipkart Style Related Products Section --- *@
+    <hr class="my-5">
+    <h3 class="fw-bold mb-4"><i class="bi bi-stars text-warning"></i> You May Also Like</h3>
+    <div class="row">
+        @if (ViewBag.RelatedProducts != null)
+        {
+            foreach (var item in (List<mobileshop.Models.Product>)ViewBag.RelatedProducts)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                        <img src="@Url.Content(item.Image)" class="card-img-top p-3" style="height:150px; object-fit:contain;" alt="@item.ProductName">
+                        <div class="card-body text-center d-flex flex-column">
+                            <h6 class="fw-bold text-truncate">@item.ProductName</h6>
+                            <p class="text-success fw-bold">₹ @item.Price.ToString("N0")</p>
+                            <div class="text-warning mb-2" style="font-size: 0.8rem;">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                            </div>
+
+                            <div class="mt-auto">
+                                <a href="@Url.Action("Details", "Product", new { id = item.Id })" class="btn btn-outline-primary btn-sm rounded-pill w-100">
+                                    <i class="bi bi-eye"></i> View Item
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted">No related products found in this category.</p>
+        }
+    </div>
+</div>

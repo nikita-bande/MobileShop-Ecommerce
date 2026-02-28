@@ -1,0 +1,98 @@
+﻿@model List<mobileshop.Models.Product>
+    @{
+        ViewBag.Title = "Home";
+    }
+
+    <style>
+        /* 1. all cards same hight*/
+        .card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+            .card:hover {
+                transform: scale(1.02);
+            }
+
+        /* 2. images show in same size */
+        .card-img-top {
+            height: 200px;
+            object-fit: contain;
+            padding: 15px;
+            background-color: #fff;
+        }
+
+        /* 3. Content area (Name, Price, Button) align  */
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1; /* Ye content ko barabar failayega */
+            text-align: center;
+        }
+
+        .search-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+    </style>
+
+    <div class="container mt-4">
+        @* Search Section *@
+        <div class="search-section text-center">
+            @using (Html.BeginForm("Index", "Product", FormMethod.Get, new { @class = "d-flex justify-content-center shadow-sm rounded p-2 bg-white" }))
+            {
+           
+                <input type="text" name="searchString" class="form-control border-0"
+                       placeholder="Search for Mobiles (e.g. iPhone, Samsung)..."
+                       value="@Request.QueryString["searchString"]" style="font-size: 1.1rem;" />
+
+                <button type="submit" class="btn btn-primary px-4 ms-2">
+                    Search
+                </button>
+
+                if (!string.IsNullOrEmpty(Request.QueryString["searchString"]))
+                {
+                    <a href="@Url.Action("Index", "Product")" class="btn btn-outline-secondary ms-2">Reset</a>
+                }
+            }
+        </div>
+
+        @* Products Grid *@
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            @if (Model == null || Model.Count == 0)
+            {
+                <div class="col-12 text-center">
+                    <h4 class="text-muted">No products found matching your search.</h4>
+                </div>
+            }
+            else
+            {
+                foreach (var item in Model)
+                {
+                    <div class="col">
+                        <div class="card h-100">
+                            @* Image handling *@
+                            <img src="@Url.Content(item.Image)" class="card-img-top" alt="@item.ProductName" />
+
+                            <div class="card-body">
+                                <h5 class="card-title">@item.ProductName</h5>
+                                <p class="card-text text-primary font-weight-bold">₹ @item.Price</p>
+
+                                <div class="d-grid mt-auto">
+                                    @* Cart link *@
+                                    <a href="@Url.Action("AddToCart", "Cart", new { id = item.Id })" class="btn btn-primary btn-sm">Add to Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>

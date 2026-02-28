@@ -1,0 +1,57 @@
+﻿@model mobileshop.Models.User
+@{
+    ViewBag.Title = "Register";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 card shadow border-0 p-4">
+            <h3 class="text-center mb-4 text-primary fw-bold">Create Your Account</h3>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken() 
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Full Name</label>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Enter your full name" })
+                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email Address</label>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "name@example.com" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Mobile Number</label>
+                    @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control", type = "number" })
+                    @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Password</label>
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Create a strong password" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Confirm Password</label>
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 mt-2 shadow-sm">
+                    <i class="bi bi-person-plus-fill"></i> Register Now
+                </button>
+
+                <div class="text-center mt-3">
+                    <p class="small text-muted">Already have an account? <a href="@Url.Action("Login", "Account")" class="text-decoration-none">Login here</a></p>
+                </div>
+
+
+            }
+        </div>
+    </div>
+</div>

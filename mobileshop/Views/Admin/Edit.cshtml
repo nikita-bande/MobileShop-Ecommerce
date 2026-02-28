@@ -1,0 +1,51 @@
+﻿@model mobileshop.Models.Product
+@{ ViewBag.Title = "Edit Product"; }
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 card shadow p-4">
+            <h3 class="text-center text-warning">Edit Mobile Details</h3>
+            <hr />
+
+   
+            @using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken() 
+
+                @Html.HiddenFor(m => m.Id) 
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Mobile Name</label>
+                    @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control" })
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Price (₹)</label>
+                    @Html.TextBoxFor(m => m.Price, new { @class = "form-control", type = "number" })
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Stock Quantity</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-box-seam"></i></span>
+                        @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "0" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.HiddenFor(m => m.Image)
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Change Product Image (Optional)</label>
+                    <input type="file" name="uploadImage" class="form-control" />
+                    <small class="text-muted">Current: @Model.Image</small>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-warning fw-bold text-dark">Update Product</button>
+                    <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">Cancel</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

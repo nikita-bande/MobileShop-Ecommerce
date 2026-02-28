@@ -1,0 +1,34 @@
+﻿@model mobileshop.Models.Product
+@{ ViewBag.Title = "Add New Mobile"; }
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 card shadow p-4 border-0">
+            <h3 class="text-center text-success mb-3">Add New Mobile</h3>
+            <hr />
+
+            @using (Html.BeginForm("Create", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Mobile Name</label>
+                    @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control", placeholder = "e.g. iPhone 15", required = "required" })
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Price (₹)</label>
+                    @Html.TextBoxFor(m => m.Price, new { @class = "form-control", type = "number", required = "required" })
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Select Mobile Photo</label>
+                    <input type="file" name="uploadImage" class="form-control" accept="image/*" required />
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success btn-lg shadow">Upload & Save Product</button>
+                    <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary">Back to Admin List</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

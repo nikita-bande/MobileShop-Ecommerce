@@ -1,0 +1,55 @@
+﻿@model mobileshop.Models.Order
+@using mobileshop.Models
+@{
+    ViewBag.Title = "Checkout - MobileShop";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">Delivery & Order Details</h4>
+                </div>
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("PlaceOrder", "Cart", FormMethod.Post))
+                    {
+                        @* 1. Full Name Field *@
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Full Name</label>
+                            @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", placeholder = "Nikita Bande", required = "required" })
+                        </div>
+
+                        @* 2. Mobile Number Field *@
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mobile Number</label>
+                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "98XXXXXXXX", required = "required", type = "number" })
+                        </div>
+
+                        @* 3. Shipping Address Field *@
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Shipping Address</label>
+                            @Html.TextAreaFor(m => m.Address, new { @class = "form-control", rows = "3", placeholder = "Enter your Latur or Pune address", required = "required" })
+                        </div>
+
+                        @* 4. Total Amount Section *@
+                        <div class="alert alert-secondary d-flex justify-content-between align-items-center">
+                            <span>Total Amount Payable:</span>
+                            <strong class="fs-5 text-success">
+                                ₹ @(Session["cart"] != null ? ((List<Product>)Session["cart"]).Sum(p => (decimal)p.Price).ToString("N2") : "0.00")
+                            </strong>
+                        </div>
+
+                        @* 5. Action Buttons *@
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg shadow">
+                                Confirm & Place Order <i class="bi bi-check-circle"></i>
+                            </button>
+                            <a href="@Url.Action("ViewCart", "Cart")" class="btn btn-outline-secondary">Back to Cart</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

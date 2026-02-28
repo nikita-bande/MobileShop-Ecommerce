@@ -1,0 +1,106 @@
+﻿@model IEnumerable<mobileshop.Models.Product>
+    @using System.Web.Mvc
+    @using System.Web.Mvc.Html
+    @{
+        ViewBag.Title = "Admin Dashboard";
+    }
+
+    <div class="container mt-4">
+        <h2 class="mb-4 fw-bold"><i class="bi bi-speedometer2"></i> Admin Overview</h2>
+
+        <div class="row">
+            @* Total Revenue Card *@
+            <div class="col-md-3 mb-4">
+                <div class="card bg-primary text-white shadow border-0 rounded-4 h-100">
+                    <div class="card-body py-4">
+                        <h6 class="text-uppercase small fw-bold">Total Revenue</h6>
+                        <h2 class="fw-bold">₹ @ViewBag.TotalRevenue.ToString("N0")</h2>
+                        <i class="bi bi-currency-rupee position-absolute bottom-0 end-0 p-3 opacity-25 fs-1"></i>
+                    </div>
+                </div>
+            </div>
+
+            @* Total Orders Card *@
+            <div class="col-md-3 mb-4">
+                <div class="card bg-success text-white shadow border-0 rounded-4 h-100">
+                    <div class="card-body py-4">
+                        <h6 class="text-uppercase small fw-bold">Total Orders</h6>
+                        <h2 class="fw-bold">@ViewBag.TotalOrders</h2>
+                        <i class="bi bi-cart-check position-absolute bottom-0 end-0 p-3 opacity-25 fs-1"></i>
+                    </div>
+                </div>
+            </div>
+
+            @* Out of Stock Card (Naya Card) *@
+            <div class="col-md-3 mb-4">
+                <div class="card bg-danger text-white shadow border-0 rounded-4 h-100">
+                    <div class="card-body py-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase small fw-bold mb-1">Out of Stock</h6>
+                                <h2 class="fw-bold mb-0">@ViewBag.OutOfStockCount</h2>
+                            </div>
+                            <i class="bi bi-x-circle fs-1 opacity-25"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Total Users Card *@
+            <div class="col-md-3 mb-4">
+                <div class="card bg-info text-white shadow border-0 rounded-4 h-100">
+                    <div class="card-body py-4">
+                        <h6 class="text-uppercase small fw-bold">Registered Users</h6>
+                        <h2 class="fw-bold">@ViewBag.TotalUsers</h2>
+                        <i class="bi bi-people position-absolute bottom-0 end-0 p-3 opacity-25 fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Low Stock Alerts Section *@
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card shadow border-0 rounded-4">
+                    <div class="card-header bg-dark text-white rounded-top-4 py-3">
+                        <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill text-warning"></i> Low Stock Alerts (Refill Required)</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.LowStock != null && ((List<mobileshop.Models.Product>)ViewBag.LowStock).Any())
+                        {
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Category</th>
+                                        <th>Current Stock</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var p in (List<mobileshop.Models.Product>)ViewBag.LowStock)
+                                    {
+                                        <tr>
+                                            <td><span class="fw-bold">@p.ProductName</span></td>
+                                            <td>@p.Category</td>
+                                            <td><span class="badge bg-danger">@p.Quantity Left</span></td>
+                                            <td>
+                                                <a href="@Url.Action("Edit", "Admin", new { id = p.Id })" class="btn btn-sm btn-outline-primary rounded-pill">Update Stock</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="text-center py-3">
+                                <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                                <p class="text-muted mt-2">All products are well-stocked!</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
